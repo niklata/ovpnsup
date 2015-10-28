@@ -59,7 +59,7 @@ static void mark_tunnel_down(const char *tag)
 
 static void reload_firewall(void)
 {
-    static char *fwargs[] = { "reload", NULL };
+    char * const fwargs[] = { "/sbin/fw", "reload", NULL };
     g_child_done = false;
     g_terminate = false;
     int child_pid = fork();
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
 
     switch (child_pid) {
         case 0: {
-            execv(argv[2], argv + 3);
+            execv(argv[2], argv + 2);
             exit(EXIT_FAILURE);
         }
         case -1: {
