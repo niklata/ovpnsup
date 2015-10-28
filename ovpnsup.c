@@ -8,8 +8,8 @@
 #include <signal.h>
 #include "nk/signals.h"
 
-static bool g_child_done = false;
-static bool g_terminate = false;
+static volatile bool g_child_done = false;
+static volatile bool g_terminate = false;
 
 static void sighandler(int sig)
 {
