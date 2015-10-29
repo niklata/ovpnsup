@@ -7,6 +7,8 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include "nk/signals.h"
+#include <time.h>
+#include <errno.h>
 
 static volatile bool g_child_done = false;
 static volatile bool g_terminate = false;
@@ -75,7 +77,8 @@ static void reload_firewall(void)
         default: {
             // parent
             while (!g_child_done && !g_terminate) {
-                sleep(60 * 1000);
+                struct timespec sl = { 86400, 0 };
+                nanosleep(&sl, NULL);
             }
             break;
         }
@@ -123,11 +126,17 @@ int main(int argc, char *argv[]) {
         default: {
             // parent
             while (!g_child_done && !g_terminate) {
-                sleep(60 * 1000);
+                struct timespec sl = { 86400, 0 };
+                nanosleep(&sl, NULL);
             }
             if (g_terminate) {
                 kill(child_pid, SIGTERM);
-                sleep(1000);
+                struct timespec sl = { 3, 0 }, slr;
+retry_killwait:
+                if (nanosleep(&sl, &slr) < 0 && errno == EINTR) {
+                    sl = slr;
+                    goto retry_killwait;
+                }
                 kill(child_pid, SIGKILL);
             }
             free_children();
