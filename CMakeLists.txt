@@ -1,13 +1,19 @@
-project (ovpnsup)
+cmake_minimum_required(VERSION 3.3)
+if(${CMAKE_VERSION} VERSION_LESS 3.12)
+  cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+else()
+  cmake_policy(VERSION 3.12)
+endif()
 
-cmake_minimum_required (VERSION 2.6)
+project (ovpnsup DESCRIPTION "openvpn supervisor" LANGUAGES C)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s -std=gnu99 -fno-strict-overflow -pedantic -Wall -Wextra -Wimplicit-fallthrough=0 -Wformat=2 -Wformat-nonliteral -Wformat-security -Wshadow -Wpointer-arith -Wmissing-prototypes -Wcast-qual")
+set(CMAKE_C_FLAGS "-std=gnu99 -fno-strict-overflow -pedantic -Wall -Wextra -Wimplicit-fallthrough=0 -Wformat=2 -Wformat-nonliteral -Wformat-security -Wshadow -Wpointer-arith -Wmissing-prototypes -Wcast-qual -Wno-unused-parameter")
 
-include_directories("${PROJECT_SOURCE_DIR}/ncmlib")
 add_subdirectory(ncmlib)
 
-file(GLOB OVPNSUP_SRCS "*.c")
-
-add_executable(ovpnsup ${OVPNSUP_SRCS})
-target_link_libraries(ovpnsup ncmlib)
+add_executable(ovpnsup)
+target_sources(ovpnsup PRIVATE
+  "ovpnsup.c"
+)
+include_directories(ovpnsup PRIVATE "${PROJECT_SOURCE_DIR}/ncmlib")
+target_link_libraries(ovpnsup PUBLIC ncmlib)
