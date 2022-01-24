@@ -1,0 +1,6 @@
+*.o
+nk/*.o
+*.d
+nk/*.d
+ovpnsup
+

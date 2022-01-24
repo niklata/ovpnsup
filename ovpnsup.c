@@ -36,8 +36,8 @@ static void mark_tunnel_down(const char *tag)
 {
     static const char false_text[] = "false\n";
     char target[1024];
-    size_t written = snprintf(target, sizeof target, "/etc/openvpn/state/%s-ISUP", tag);
-    if (written >= sizeof target) {
+    int written = snprintf(target, sizeof target, "/etc/openvpn/state/%s-ISUP", tag);
+    if (written < 0 || (size_t)written >= sizeof target) {
         printf("unable to write to -ISUP file, path would be too long\n");
         exit(EXIT_FAILURE);
     }
@@ -47,8 +47,8 @@ static void mark_tunnel_down(const char *tag)
         exit(EXIT_FAILURE);
     }
     written = fwrite(false_text, 1, sizeof false_text, f);
-    if (written < sizeof false_text) {
-        printf("failed to write false_text: %zu < %zu\n", written, sizeof false_text);
+    if (written < 0 || (size_t)written < sizeof false_text) {
+        printf("failed to write false_text: %d < %zu\n", written, sizeof false_text);
         exit(EXIT_FAILURE);
     }
     if (fclose(f)) {
