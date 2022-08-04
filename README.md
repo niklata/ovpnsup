@@ -49,3 +49,9 @@ In the default configuration, invocation should be similar to:
 
 Refer to the source code for more details.
 
+## Downloads
+
+* [GitLab](https://gitlab.com/niklata/ovpnsup)
+* [Codeberg](https://codeberg.org/niklata/ovpnsup)
+* [BitBucket](https://bitbucket.com/niklata/ovpnsup)
+* [GitHub](https://github.com/niklata/ovpnsup)
